@@ -9,7 +9,7 @@ public interface MailAccountManager {
      * DuplicateAccountException
      */
     void registerNewAccount(String email, String password, Person person)
-            throws DuplicateAccountException;
+            throws Exception;
     /**
      * Метод удаляет пользователя, если логин и пароль введены
      * верно. В противном случае выбрасывает
