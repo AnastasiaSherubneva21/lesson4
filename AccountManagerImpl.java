@@ -57,26 +57,92 @@ public class AccountManagerImpl implements MailAccountManager{
             lst.add(str);
             writeText(lst);
         }
-
     }
 
     @Override
-    public void removeAccount(String email, String password) {
-
+    public void removeAccount(String email, String password) throws WrongCredentialsException{
+        ArrayList<String> acclst = readText("file.txt");
+        ArrayList<String> newlst = new ArrayList<String>();
+        String str = email + " " + password;
+        String strx = "";
+        int c = 0;
+        for (String x : acclst) {
+            if (c == 0) {
+                if (!x.equals("")) {
+                    strx = x.split(" ")[2] + " " + x.split(" ")[3];
+                    if (strx.equals(str)) {
+                        newlst.add(x);
+                        c = 1;
+                    }
+                }
+            }
+        }
+        if (c == 1) {
+            for (String x : newlst) {
+                acclst.remove(x);
+                writeText(acclst);
+            }
+        }
+        else {
+            throw new WrongCredentialsException();
+        }
     }
 
     @Override
     public boolean hasAccount(String email) {
-        return false;
+        ArrayList<String> lst = readText("file.txt");
+        String strx = "";
+        int c = 0;
+        for (String x : lst) {
+            if (!x.equals("")) {
+                strx = x.split(" ")[2];
+                if (strx.equals(email)) {
+                    c = 1;
+                }
+            }
+        }
+        return c == 1;
     }
 
     @Override
-    public Person getPerson(String email, String password) throws TooManyLoginAttemptsException {
-        return null;
+    public Person getPerson(String email, String password) throws TooManyLoginAttemptsException, WrongCredentialsException {
+        ArrayList<String> lst = readText("file.txt");
+        String str = email + " " + password;
+        String persname = "";
+        String persbd = "";
+        int c = 0;
+        for (String x : lst) {
+            if (!x.equals("")) {
+                String strx = x.split(" ")[2] + " " + x.split(" ")[3];
+                if (strx.equals(str)) {
+                    c = 1;
+                    persname = x.split(" ")[0];
+                    persbd = x.split(" ")[1];
+                }
+            }
+        }
+        if (c == 0) {
+            if (AttemptCounter.INSTANCE.checkAttempts(str)) {
+                throw new WrongCredentialsException();
+            }
+            else {
+                throw new TooManyLoginAttemptsException();
+            }
+        }
+        else {
+            return new Person(persname, persbd);
+        }
     }
 
     @Override
     public int numOfAccounts() {
-        return 0;
+        ArrayList<String> lst = readText("file.txt");
+        int c = 0;
+        for (String x : lst) {
+            if (!x.equals("")) {
+                c += 1;
+            }
+        }
+        return c;
     }
 }

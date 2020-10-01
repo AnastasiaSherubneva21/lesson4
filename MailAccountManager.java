@@ -9,13 +9,13 @@ public interface MailAccountManager {
      * DuplicateAccountException
      */
     void registerNewAccount(String email, String password, Person person)
-            throws Exception;
+            throws DuplicateAccountException;
     /**
      * Метод удаляет пользователя, если логин и пароль введены
      * верно. В противном случае выбрасывает
      * ошибку WrongCredentialsException
      */
-    void removeAccount(String email, String password);
+    void removeAccount(String email, String password) throws WrongCredentialsException;
     /** Метод возвращает true если пользователь с данным логином
      * существует
      */
@@ -27,7 +27,7 @@ public interface MailAccountManager {
      * выбрасывается исключение TooManyLoginAttemptsException
      */
     Person getPerson(String email, String password) throws
-            TooManyLoginAttemptsException;
+            TooManyLoginAttemptsException, WrongCredentialsException;
     /**
      * Метод возвращает кол-во аккаунтов в базе
      */
