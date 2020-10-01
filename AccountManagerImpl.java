@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+
 public class AccountManagerImpl implements MailAccountManager{
 
     private static void writeText(ArrayList<String> lst) {
